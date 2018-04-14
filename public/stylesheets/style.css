@@ -1,0 +1,41 @@
+body {
+  padding: 20px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+h1 {
+  color: #000000;
+}
+
+ul {
+  list-style-type: none;
+  display: flex;
+  overflow-x: scroll;
+  padding: 0;
+  margin: 20px -5px 0;
+}
+
+.movie {
+  width: 208px;
+  height: 320px;
+  padding: 10px;
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 0 5px;
+  border: 1px solid #dddddd; 
+}
+
+strong {
+  color: #ffffff;
+}
+
+span {
+  color: #e09015;
+}
+

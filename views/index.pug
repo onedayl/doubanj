@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Online
+  if movies
+    b=date + '/' + movies.length
+    ul
+      each movie in movies
+        li
+          div.movie(style="background: linear-gradient(0deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 25%), url(" + movie.cover + ")")
+            strong=movie.title
+            span=movie.rating
+
