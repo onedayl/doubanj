@@ -21,7 +21,6 @@ let FetchOnline = function() {
       const newOnlineURL = 'https://movie.douban.com/j/new_search_subjects';
       const latestID = doc ? doc.id : 0;
       const startLimit = 60;
-      const insertTime = new Date().getTime();
       let start = 0;
       let newOnlineArrival = [];
       let isFinished = false;
@@ -43,65 +42,67 @@ let FetchOnline = function() {
           start: start
         })
         .end((err, res) => {
-          assert.equal(err, null, `Fetch new_online fails @ start = ${start}`);
-          let data = JSON.parse(res.text).data;
-  
-          if (data) {
-            if (latestID === 0) {
-              // 没有记录时只获取一批
-              newOnlineArrival = data.map(e => {
-                return {
-                  id: e.id,
-                  title: e.title,
-                  cover: e.cover,
-                  rating: e.rate,
-                  insert_time: insertTime
-                }
-              });
-              isFinished = true;
-              
-            } else {
-              // 有记录时一直到匹配 latestID 为止
-              // 设定一个上限房应对特殊情况
-              // 比如 latestID 的影片刚好被和谐了
-              for (let i = 0; i < data.length; i++) {
-                const el = data[i];
-                if (el.id == latestID) {
-                  isFinished = true;
-                  break;
-                  
-                } else {
-                  newOnlineArrival.push({
-                    id: el.id,
-                    title: el.title,
-                    cover: el.cover,
-                    rating: el.rate,
-                    insert_time: insertTime
-                  })
-                }
-              }
-            }
-            
-            if (!isFinished && start < startLimit - 20) {
-              start += 20;
-              fetchNewOnline();
-  
-            } else if (newOnlineArrival.length !== 0){
-              // 使用 upsert 方式插入数据库，避免重复
-              let counter = 0;
-              newOnlineArrival.reverse().forEach(el => {
-                db.collection('newOnline').updateOne({id: el.id}, {$set: el}, {upsert: true}, err => {
-                  if (!err) {
-                    counter += 1;
-                    if (counter == newOnlineArrival.length) {
-                      client.close();
-                    }
+          if (!err) {
+            let data = JSON.parse(res.text).data;
+            if (data) {
+              if (latestID === 0) {
+                // 没有记录时只获取一批
+                newOnlineArrival = data.map(e => {
+                  return {
+                    id: e.id,
+                    title: e.title,
+                    cover: e.cover,
+                    rating: e.rate
                   }
                 });
-              });
+                isFinished = true;
+                
+              } else {
+                // 有记录时一直到匹配 latestID 为止
+                // 设定一个上限房应对特殊情况
+                // 比如 latestID 的影片刚好被和谐了
+                for (let i = 0; i < data.length; i++) {
+                  const el = data[i];
+                  if (el.id == latestID) {
+                    isFinished = true;
+                    break;
+                    
+                  } else {
+                    newOnlineArrival.push({
+                      id: el.id,
+                      title: el.title,
+                      cover: el.cover,
+                      rating: el.rate
+                    })
+                  }
+                }
+              }
+              
+              if (!isFinished && start < startLimit - 20) {
+                start += 20;
+                fetchNewOnline();
+    
+              } else if (newOnlineArrival.length !== 0){
+                // 使用 upsert 方式插入数据库，避免重复
+                let counter = 0;
+                newOnlineArrival.reverse().forEach(el => {
+                  el.insert_time = Math.floor(Date.now() / 1000);
+                  db.collection('newOnline').updateOne({id: el.id}, {$set: el}, {upsert: true}, err => {
+                    if (!err) {
+                      counter += 1;
+                      if (counter == newOnlineArrival.length) {
+                        client.close();
+                      }
+                    }
+                  });
+                });
+              }
+            } else {
+              client.close();
             }
+          } else {
+            client.close();
           }
-          client.close();
         })
       }
     })

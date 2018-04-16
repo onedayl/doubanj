@@ -1,13 +1,22 @@
 extends layout
 
 block content
-  h1 Online
-  if movies
-    b=date + '/' + movies.length
-    ul
-      each movie in movies
-        li
-          div.movie(style="background: linear-gradient(0deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 25%), url(" + movie.cover + ")")
-            strong=movie.title
-            span=movie.rating
+  .center
+    .container
+      h1 Online
+      if code == 500
+        p='Error >Д< '
+      else if !data
+        p='Empty =_='
+      else
+        ul
+          li 
+            div(class=['date', 'center'])
+              b=data.date
+          each movie in data.movies
+            li
+              div.movie(style="background-image: linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0) 60%), url(" + movie.cover + ")")
+                span.padding-6=movie.rating
+                strong.padding-6=movie.title
+
 

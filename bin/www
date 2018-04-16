@@ -6,7 +6,7 @@ let debug = require('debug')('doubanj:server');
 let schedule = require('node-schedule');
 let http = require('http');
 
-let port = normalizePort(process.env.PORT || '3000');
+let port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 // 设置定时任务
