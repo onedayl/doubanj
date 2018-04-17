@@ -3,21 +3,16 @@
 require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
 const superagent = require('superagent');
-const assert = require('assert');
 const MONGODB_HOST = process.env.MONGODB_HOST;
 const MONGODB_NAME = process.env.MONGODB_NAME;
 
 let FetchOnline = function() {
-  MongoClient.connect(MONGODB_HOST, (err, client) => {
-    const db = client.db(MONGODB_NAME);
-    assert.equal(err, null, 'Connect to database fails!');
+  MongoClient.connect(`${MONGODB_HOST}/${MONGODB_NAME}`, (err, db) => {
     
     // 获取数据库中最新影片的 id
     const cursor = db.collection('newOnline').find().sort({_id: -1});
     
     cursor.next((err, doc) => {
-      assert.equal(err, null, 'Query database fails!');
-      
       const newOnlineURL = 'https://movie.douban.com/j/new_search_subjects';
       const latestID = doc ? doc.id : 0;
       const startLimit = 60;
@@ -97,23 +92,23 @@ let FetchOnline = function() {
                           i -= 1;
                           insertMovie();
                         } else {
-                          client.close();
+                          db.close();
                         }
                       })
                     } else if (i > 0){
                       i -= 1;
                       insertMovie();
                     } else {
-                      client.close();
+                      db.close();
                     }
                   })
                 }
               }
             } else {
-              client.close();
+              db.close();
             }
           } else {
-            client.close();
+            db.close();
           }
         })
       }

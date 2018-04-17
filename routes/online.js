@@ -13,9 +13,8 @@ router.get('/', function(req, res) {
     ? validateSince(req.query.since)
     : Math.floor(Date.now() / 1000);
 
-  MongoClient.connect(MONGODB_HOST, (err, client) => {
+  MongoClient.connect(`${MONGODB_HOST}/${MONGODB_NAME}`, (err, db) => {
     if (!err) {
-      const db = client.db(MONGODB_NAME);
       const cursor = db.collection('newOnline')
       .find({"insert_time": {$lt: since}})
       .sort({"_id": -1});
@@ -45,7 +44,7 @@ router.get('/', function(req, res) {
                   msg: 'OK',
                   data: data
                 }));
-                client.close();
+                db.close();
               }
             })
         } else {
@@ -54,7 +53,7 @@ router.get('/', function(req, res) {
             msg: 'OK',
             data: {}
           }));
-          client.close();
+          db.close();
         }
       });
     } else {
