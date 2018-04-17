@@ -83,19 +83,31 @@ let FetchOnline = function() {
                 fetchNewOnline();
     
               } else if (newOnlineArrival.length !== 0){
-                // 使用 upsert 方式插入数据库，避免重复
-                let counter = 0;
-                newOnlineArrival.reverse().forEach(el => {
-                  el.insert_time = Math.floor(Date.now() / 1000);
-                  db.collection('newOnline').updateOne({id: el.id}, {$set: el}, {upsert: true}, err => {
-                    if (!err) {
-                      counter += 1;
-                      if (counter == newOnlineArrival.length) {
-                        client.close();
-                      }
+                let i = newOnlineArrival.length - 1;
+                insertMovie();
+
+                function insertMovie () {
+                  let movie = newOnlineArrival[i];
+                  let cursor = db.collection('newOnline').find({id: movie.id});
+                  cursor.count((err, n) => {
+                    if (n === 0) {
+                      movie.insert_time = Math.floor(Date.now() / 1000);
+                      db.collection('newOnline').insertOne(movie, err => {
+                        if (i > 0) {
+                          i -= 1;
+                          insertMovie();
+                        } else {
+                          client.close();
+                        }
+                      })
+                    } else if (i > 0){
+                      i -= 1;
+                      insertMovie();
+                    } else {
+                      client.close();
                     }
-                  });
-                });
+                  })
+                }
               }
             } else {
               client.close();
