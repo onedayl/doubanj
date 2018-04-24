@@ -16,7 +16,17 @@ const playSourceName = [
   '乐视视频',
   'PP视频',
   '哔哩哔哩'
-]
+];
+const playSourceSearchSuffix = [
+  'https://v.qq.com/x/search/?q=',
+  'http://www.soku.com/search_video/q_',
+  'http://so.iqiyi.com/so/q_',
+  'https://so.mgtv.com/so/k-',
+  'https://so.tv.sohu.com/mts?box=1&wd=',
+  'http://so.le.com/s?wd=',
+  'http://search.pptv.com/s_video?kw=',
+  'https://search.bilibili.com/all?keyword='
+];
 
 router.get('/:id', (req, res, next) => {
   res.set({ 'content-type': 'application/json; charset=utf-8' });
@@ -28,6 +38,7 @@ router.get('/:id', (req, res, next) => {
     redisClient.get(`subject:${id}`, (err, reply) => {
       if (!err) {
         if (reply) {
+          // redis 有缓存时直接返回
           res.end(reply);          
 
         } else {
@@ -123,7 +134,9 @@ function extractSubject($) {
     Array.from(playBtn).forEach((e, i) => {
       play_source[i] = {};
       play_source[i].id = playSourceName.indexOf(e.attribs['data-cn']);
-      play_source[i].link = e.attribs.href;
+      play_source[i].link = e.attribs.href == 'javascript: void 0;'
+        ? playSourceSearchSuffix[play_source[i].id] + subject.title
+        : e.attribs.href;
     });
 
     const buyLink = $('.buylink-price span');
