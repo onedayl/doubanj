@@ -125,7 +125,9 @@ function extractSubject($) {
       .join('/');
   }
 
-  subject.cover = $('img[rel="v:image"]').prop('src');  
+  subject.cover = $('img[rel="v:image"]').prop('src');
+  subject.rating = $('strong[property="v:average"]').text();
+  subject.summary = $('span[property="v:summary"]').text();
   
   const play_source = [];
   const playBtn = $('a.playBtn');
