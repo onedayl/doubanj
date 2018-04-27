@@ -88,7 +88,7 @@ router.use('/', (req, res) => {
 function validateId(id) {
   let _id = parseInt(id);
   _id = isNaN(_id) ? '0' : _id.toString();
-  _id = /^\d{8}$/.test(_id) ? _id : '0';
+  _id = /^\d{7,8}$/.test(_id) ? _id : '0';
   return _id;
 }
 
