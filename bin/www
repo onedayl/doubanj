@@ -2,6 +2,9 @@
 
 let app = require('../app');
 let fetchOnline = require('../fetch_online');
+const HandleFetch = require('../scripts/handle_fetch');
+const IQIYI = require('../scripts/iqiyi');
+const MGTV = require('../scripts/mgtv');
 let debug = require('debug')('doubanj:server');
 let schedule = require('node-schedule');
 let http = require('http');
@@ -15,6 +18,20 @@ var times = [0, 10, 20, 30, 40, 50];
 rule.minute  = times; 
 schedule.scheduleJob(rule, () => {
   fetchOnline();
+});
+
+const rule3 = new schedule.RecurrenceRule(); 
+const times3 = [3, 13, 23, 33, 43, 53];  
+rule3.minute  = times3; 
+schedule.scheduleJob(rule3, () => {
+  IQIYI.fetch(HandleFetch);
+});
+
+const rule4 = new schedule.RecurrenceRule();  
+const times4 = [4, 14, 24, 34, 44, 54];  
+rule4.minute  = times4; 
+schedule.scheduleJob(rule4, () => {
+  MGTV.fetch(HandleFetch);
 });
 
 // 启动应用
