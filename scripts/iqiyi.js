@@ -19,7 +19,6 @@ const IQIYI = {
         cursor.next((err, doc) => {
           if (!err) {
             const latestId = doc ? doc.id : '';
-            console.log('latestId: ' + latestId);
             superagent
               .get(url)
               .end((err, reply) => {
@@ -50,7 +49,6 @@ const IQIYI = {
                         douban_id: e.albumDocInfo.video_lib_meta.douban_id || ''
                       }
                     });
-                    console.log(newDocs.length);
                     db.close();
                     callback(newDocs);
                   } else {
