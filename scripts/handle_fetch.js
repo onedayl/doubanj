@@ -11,6 +11,7 @@ module.exports = function (docs) {
     if (!err) {
       docs = docs.map(e => {
         e.insert_time = Math.floor(Date.now() / 1000);
+        return e;
       });
       db.collection('newOnlineSource').insertMany(docs.reverse(), err => {
         if (!err) {
