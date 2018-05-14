@@ -5,6 +5,7 @@ let fetchOnline = require('../fetch_online');
 const HandleFetch = require('../scripts/handle_fetch');
 const IQIYI = require('../scripts/iqiyi');
 const MGTV = require('../scripts/mgtv');
+const BILIBILI = require('../scripts/bilibili');
 let debug = require('debug')('doubanj:server');
 let schedule = require('node-schedule');
 let http = require('http');
@@ -31,6 +32,13 @@ const rule4 = new schedule.RecurrenceRule();
 const times4 = [4, 14, 24, 34, 44, 54];  
 rule4.minute  = times4; 
 schedule.scheduleJob(rule4, () => {
+  MGTV.fetch(HandleFetch);
+});
+
+const rule8 = new schedule.RecurrenceRule();  
+const times8 = [8, 18, 28, 38, 48, 58];  
+rule8.minute  = times8; 
+schedule.scheduleJob(rule8, () => {
   MGTV.fetch(HandleFetch);
 });
 

@@ -38,7 +38,7 @@ module.exports = function (docs) {
               .end((err, reply) => {
                 if (!err) {
                   const data = JSON.parse(reply.text);
-                  if (data && data[0].title == doc.title) {
+                  if (data && data[0] && data[0].title == doc.title) {
                     doc.douban_id = data[0].id;
                     matches.push(doc)
                     i -= 1;
