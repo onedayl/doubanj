@@ -88,13 +88,16 @@ module.exports = function (docs) {
                     .end((err, reply) => {
                       if (!err) {
                         const data = JSON.parse(reply.text).data;
-                        packed.push({
-                          id: doc.douban_id,
-                          title: data.title,
-                          cover: data.cover,
-                          rating: data.rating,
-                          insert_time: Math.floor(Date.now() / 1000)
-                        });
+                        // 过滤掉豆瓣上还未更新播放源信息的条目
+                        if (data.play_source.length !== 0) {
+                          packed.push({
+                            id: doc.douban_id,
+                            title: data.title,
+                            cover: data.cover,
+                            rating: data.rating,
+                            insert_time: Math.floor(Date.now() / 1000)
+                          });
+                        } 
                         k -= 1;
                         packNewOnline();
                       } else {
