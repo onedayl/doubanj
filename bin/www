@@ -3,6 +3,7 @@
 let app = require('../app');
 let fetchOnline = require('../fetch_online');
 const HandleFetch = require('../scripts/handle_fetch');
+const QQ = require('../scripts/qq');
 const IQIYI = require('../scripts/iqiyi');
 const MGTV = require('../scripts/mgtv');
 const BILIBILI = require('../scripts/bilibili');
@@ -19,6 +20,13 @@ var times = [0, 10, 20, 30, 40, 50];
 rule.minute  = times; 
 schedule.scheduleJob(rule, () => {
   fetchOnline();
+});
+
+const rule1 = new schedule.RecurrenceRule(); 
+const times1 = [1, 11, 21, 31, 41, 51];  
+rule1.minute  = times1; 
+schedule.scheduleJob(rule1, () => {
+  QQ.fetch(HandleFetch);
 });
 
 const rule3 = new schedule.RecurrenceRule(); 
