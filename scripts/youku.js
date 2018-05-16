@@ -6,9 +6,9 @@ const superagent = require('superagent');
 const cheerio = require('cheerio');
 const MONGODB_HOST = process.env.MONGODB_HOST;
 const MONGODB_NAME = process.env.MONGODB_NAME;
-const url = 'https://v.qq.com/x/list/movie?offset=0&format=1&sort=19';
+const url = 'http://list.youku.com/category/show/c_96_s_6_d_1_u_1.html';
 
-const QQ = {
+const YOUKU = {
   fetch: function (callback) {
     MongoClient.connect(`${MONGODB_HOST}/${MONGODB_NAME}`, (err, db) => {
       if (!err) {
@@ -17,11 +17,11 @@ const QQ = {
           .end((err, reply) => {
             if (!err) {
               const $ = cheerio.load(reply.text);
-              const items = Array.from($('.list_item .figure'));
+              const items = Array.from($('.info-list .title a'));
               const hitDocs = items.map(e => {
                 return {
-                  id: e.attribs['data-float'],
-                  title: e.children[1].attribs.alt
+                  id: /id_((\w|\d)+)==/.exec(e.attribs.href)[1],
+                  title: e.attribs.title
                 }
               });
               if (hitDocs.length !== 0) {
@@ -29,7 +29,7 @@ const QQ = {
                   return {
                     id: e.id,
                     title: e.title,
-                    source_id: 1,
+                    source_id: 2,
                     douban_id: ''
                   }
                 });
@@ -47,4 +47,4 @@ const QQ = {
   }
 }
 
-module.exports = QQ;
+module.exports = YOUKU;

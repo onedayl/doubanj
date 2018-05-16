@@ -13,7 +13,6 @@ router.get('/', function(req, res, next) {
 
   MongoClient.connect(`${MONGODB_HOST}/${MONGODB_NAME}`, (err, db) => {
     if (!err) {
-      console.log('hehe');
       const cursor = db.collection('newOnline')
       .find()
       .sort({"_id": -1})

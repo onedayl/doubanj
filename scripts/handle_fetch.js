@@ -79,8 +79,8 @@ module.exports = function (docs) {
                     .end((err, reply) => {
                       if (!err) {
                         const data = JSON.parse(reply.text).data;
-                        // 过滤掉豆瓣上还未更新播放源信息的条目
-                        if (data.play_source.length !== 0) {
+                        // 过滤掉豆瓣上还未更新播放源信息或未有评分的条目
+                        if (data.play_source.length !== 0 && data.rating) {
                           packed.push({
                             id: doc.douban_id,
                             title: data.title,

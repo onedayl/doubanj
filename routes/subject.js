@@ -116,15 +116,6 @@ function extractSubject($) {
       .join('/');
   }
 
-  const runtime = $('span[property="v:runtime"]');
-  if (runtime.length == 1) {
-    subject.runtime = runtime.text();
-  } else if (runtime.length > 1){
-    subject.runtime = Array.from(runtime)
-      .map(e => e.children[0].data)
-      .join('/');
-  }
-
   subject.cover = $('img[rel="v:image"]').prop('src');
   subject.rating = $('strong[property="v:average"]').text();
   subject.summary = $('span[property="v:summary"]').text();
