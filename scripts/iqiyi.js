@@ -11,57 +11,32 @@ const IQIYI = {
   fetch: function (callback) {
     MongoClient.connect(`${MONGODB_HOST}/${MONGODB_NAME}`, (err, db) => {
       if (!err) {
-        const cursor = db.collection('newOnlineSource')
-          .find({source_id: 3})
-          .sort({_id: -1})
-          .limit(1);
-
-        cursor.next((err, doc) => {
-          if (!err) {
-            const latestId = doc ? doc.id : '';
-            superagent
-              .get(url)
-              .end((err, reply) => {
-                if (!err) {
-                  const hitDocs = JSON.parse(reply.text).data.docinfos
-                    .filter(e => {
-                      return !(/（普通话）/.test(e.albumDocInfo.albumTitle));
-                    });
-                  let newDocs = [];
-                  if (latestId == '') {
-                    newDocs = hitDocs;
-                  } else {
-                    for (let i = 0; i < hitDocs.length; i++) {
-                      const e = hitDocs[i];
-                      if (e.albumDocInfo.albumId != latestId) {
-                        newDocs.push(e);
-                      } else {
-                        break;
-                      }
-                    }
+        superagent
+          .get(url)
+          .end((err, reply) => {
+            if (!err) {
+              const hitDocs = JSON.parse(reply.text).data.docinfos
+                .filter(e => {
+                  return !(/（普通话）/.test(e.albumDocInfo.albumTitle));
+                });
+              if (hitDocs.length !== 0) {
+                const newDocs = hitDocs.map(e => {
+                  return {
+                    id: e.albumDocInfo.albumId,
+                    title: e.albumDocInfo.albumTitle,
+                    source_id: 3,
+                    douban_id: e.albumDocInfo.video_lib_meta.douban_id || ''
                   }
-                  if (newDocs.length !== 0) {
-                    newDocs = newDocs.map(e => {
-                      return {
-                        id: e.albumDocInfo.albumId,
-                        title: e.albumDocInfo.albumTitle,
-                        source_id: 3,
-                        douban_id: e.albumDocInfo.video_lib_meta.douban_id || ''
-                      }
-                    });
-                    db.close();
-                    callback(newDocs);
-                  } else {
-                    db.close();
-                  }
-                } else {
-                  db.close();
-                }
-              })
-          } else {
-            db.close();
-          }
-        });
+                });
+                db.close();
+                callback(newDocs);
+              } else {
+                db.close();
+              }
+            } else {
+              db.close();
+            }
+          })
       }
     });
   }

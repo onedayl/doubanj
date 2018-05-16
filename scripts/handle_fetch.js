@@ -9,16 +9,7 @@ const MONGODB_NAME = process.env.MONGODB_NAME;
 module.exports = function (docs) {
   MongoClient.connect(`${MONGODB_HOST}/${MONGODB_NAME}`, (err, db) => {
     if (!err) {
-      docs = docs.map(e => {
-        e.insert_time = Math.floor(Date.now() / 1000);
-        return e;
-      });
-      db.collection('newOnlineSource').insertMany(docs.reverse(), err => {
-        if (!err) {
-          console.log('insert newOnlineSource successed!');
-        }
-      });
-
+      console.log(`newOnlineSource:${docs[0].source_id}`);
       let i = docs.length - 1;
       let matches = [];
 
