@@ -1,0 +1,62 @@
+const schedule = require('node-schedule');
+const HandleFetch = require('../scripts/handle_fetch');
+const DOUBAN = require('../scripts/douban');
+const QQ = require('../scripts/qq');
+const YOUKU = require('../scripts/youku');
+const IQIYI = require('../scripts/iqiyi');
+const MGTV = require('../scripts/mgtv');
+const SOHU = require('../scripts/sohu');
+const BILIBILI = require('../scripts/bilibili');
+
+// 设置定时任务
+const rule0 = new schedule.RecurrenceRule();  
+var times0 = [0];  
+rule0.minute  = times0; 
+schedule.scheduleJob(rule0, () => {
+  DOUBAN.fetch(HandleFetch);
+});
+
+const rule1 = new schedule.RecurrenceRule(); 
+const times1 = [8];  
+rule1.minute  = times1; 
+schedule.scheduleJob(rule1, () => {
+  QQ.fetch(HandleFetch);
+});
+
+const rule2 = new schedule.RecurrenceRule(); 
+const times2 = [16];  
+rule2.minute  = times2; 
+schedule.scheduleJob(rule2, () => {
+  YOUKU.fetch(HandleFetch);
+});
+
+const rule3 = new schedule.RecurrenceRule(); 
+const times3 = [24];  
+rule3.minute  = times3; 
+schedule.scheduleJob(rule3, () => {
+  IQIYI.fetch(HandleFetch);
+});
+
+const rule4 = new schedule.RecurrenceRule();  
+const times4 = [32];  
+rule4.minute  = times4; 
+schedule.scheduleJob(rule4, () => {
+  MGTV.fetch(HandleFetch);
+});
+
+const rule5 = new schedule.RecurrenceRule();  
+const times5 = [40];  
+rule5.minute  = times5; 
+schedule.scheduleJob(rule5, () => {
+  SOHU.fetch(HandleFetch);
+});
+
+const rule8 = new schedule.RecurrenceRule();  
+const times8 = [48];  
+rule8.minute  = times8; 
+schedule.scheduleJob(rule8, () => {
+  BILIBILI.fetch(HandleFetch);
+});
+
+console.log('Schedule starts.');
+
