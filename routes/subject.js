@@ -45,7 +45,7 @@ router.get('/:id', (req, res, next) => {
 
         } else {
           // 抓取页面信息写入 redis 并返回
-          const subjectUrl = `https://movie.douban.com/subject/${id}/`;
+          const subjectUrl = `https://movie.douban.com/subject/${id}/?from=showing`;
           superagent
           .get(subjectUrl)
           .set({
