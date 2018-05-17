@@ -15,7 +15,8 @@ const playSourceName = [
   '搜狐视频',
   '乐视视频',
   'PP视频',
-  '哔哩哔哩'
+  '哔哩哔哩',
+  '央视网'
 ];
 const playSourceSearchSuffix = [
   'https://v.qq.com/x/search/?q=',
@@ -25,7 +26,8 @@ const playSourceSearchSuffix = [
   'https://so.tv.sohu.com/mts?box=1&wd=',
   'http://so.le.com/s?wd=',
   'http://search.pptv.com/s_video?kw=',
-  'https://search.bilibili.com/all?keyword='
+  'https://search.bilibili.com/all?keyword=',
+  'http://search.cctv.com/search.php?qtext='
 ];
 
 router.get('/:id', (req, res, next) => {
@@ -62,6 +64,11 @@ router.get('/:id', (req, res, next) => {
 
               redisClient.set(`subject:${id}`, subject, 'EX', 86400);
               res.end(subject);
+            } else {
+              res.end(JSON.stringify({
+                code: 501,
+                msg: '请求第三方服务器失败'
+              }));
             } 
           });
         }
@@ -73,9 +80,6 @@ router.get('/:id', (req, res, next) => {
       }
     })
   }
-
-
-  
 });
 
 router.use('/', (req, res) => {
