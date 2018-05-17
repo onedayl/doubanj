@@ -32,7 +32,9 @@ module.exports = function (docs) {
               checkNewOnlineSource();
             }
           });
-        } else if (newDocs.length) {
+        } else if (!newDocs.length) {
+          console.log('newOnlineSource skip.');
+        } else {
           db.collection('newOnlineSource').insertMany(newDocs.reverse(), err => {
             if (!err) {
               console.log('newOnlinceSource good.');
@@ -40,12 +42,10 @@ module.exports = function (docs) {
               console.log('newOnlinceSource bad.');
             }
           });
-        } else {
-          console.log('newOnlineSource skip.');
           let i = newDocs.length - 1;
           let matches = [];
           matchNewOnline();
-
+          
           function matchNewOnline () {
             if (i >=0) {
               const doc = newDocs[i];
