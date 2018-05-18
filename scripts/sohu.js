@@ -20,7 +20,7 @@ const SOHU = {
               const items = Array.from($('.lh-tit a'));
               const hitDocs = items.map(e => {
                 return {
-                  id: /\/(\d+)\.html/.exec(e.attribs.href)[1],
+                  id: /\/((\w|\d|\=)+)\.html/.exec(e.attribs.href)[1],
                   title: e.attribs.title
                 }
               });

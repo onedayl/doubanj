@@ -27,7 +27,6 @@ module.exports = function (docs) {
               n -= 1;
               checkNewOnlineSource();
             } else {
-              console.log('old: ' + doc.title);
               n -= 1;
               checkNewOnlineSource();
             }
