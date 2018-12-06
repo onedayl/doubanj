@@ -20,7 +20,7 @@ const YOUKU = {
               const items = Array.from($('.info-list .title a'));
               const hitDocs = items.map(e => {
                 return {
-                  id: /id_((\w|\d)+)==/.exec(e.attribs.href)[1],
+                  id: /id_((\w|\d)+)=?=?/.exec(e.attribs.href)[1],
                   title: e.attribs.title
                 }
               });
