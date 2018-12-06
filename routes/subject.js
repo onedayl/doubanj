@@ -16,7 +16,8 @@ const playSourceName = [
   '乐视视频',
   'PP视频',
   '哔哩哔哩',
-  '央视网'
+  '央视网',
+  '1905电影网',
 ];
 const playSourceSearchSuffix = [
   'https://v.qq.com/x/search/?q=',
@@ -27,7 +28,8 @@ const playSourceSearchSuffix = [
   'http://so.le.com/s?wd=',
   'http://search.pptv.com/s_video?kw=',
   'https://search.bilibili.com/all?keyword=',
-  'http://search.cctv.com/search.php?qtext='
+  'http://search.cctv.com/search.php?qtext=',
+  'http://vip.1905.com/Search?q='
 ];
 
 router.get('/:id', (req, res, next) => {
